@@ -1,0 +1,22 @@
+[
+  {"time":10, "event":"threat", "t":1, "zone":"red"},
+  {"time":60, "event":"threat", "t":3, "zone":"white", "unconfirmed":true},
+  {"time":90, "event":"incoming_data"},
+  {"time":115, "event":"threat", "t":4, "zone":"red", "serious":true},
+  {"time":145, "event":"data_transfer"},
+  {"time":225, "event":"end_phase", "phase":1},
+
+  {"time":235, "event":"data_transfer"},
+  {"time":250, "event":"threat", "t":5, "zone":"internal", "serious":true},
+  {"time":275, "event":"incoming_data"},
+  {"time":300, "event":"threat", "t":6, "zone":"blue", "serious":true},
+  {"time":345, "event":"communications_down", "duration":10},
+  {"time":385, "event":"incoming_data"},
+  {"time":395, "event":"communications_down", "duration":10},
+  {"time":450, "event":"end_phase", "phase":2},
+
+  {"time":455, "event":"data_transfer"},
+  {"time":480, "event":"communications_down", "duration":20},
+  {"time":535, "event":"communications_down", "duration":15},
+  {"time":580, "event":"end_phase", "phase":3}
+]
