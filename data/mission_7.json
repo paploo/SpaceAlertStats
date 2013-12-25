@@ -3,7 +3,7 @@
   {"time":35, "event":"threat", "t":3, "zone":"red", "serious":true},
   {"time":70, "event":"incoming_data"},
   {"time":105, "event":"threat", "t":4, "zone":"internal", "serious":true},
-  {"time":135, "evemt":"data_transfer"},
+  {"time":135, "event":"data_transfer"},
   {"time":175, "event":"communications_down", "duration":10},
   {"time":220, "event":"end_phase", "phase":1},
 

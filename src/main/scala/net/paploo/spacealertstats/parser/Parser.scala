@@ -27,7 +27,7 @@ object Parser {
 
   protected def eventFromMap(eventMap: Map[String, Any]): Event = eventMap.getOrElse("event", "no-event-defined") match {
     case "incoming_data" => incomingDataEventFromMap(eventMap)
-    case "data_transfer" => dataTranferEventFromMap(eventMap)
+    case "data_transfer" => dataTransferEventFromMap(eventMap)
     case "communications_down" => communicationsEventDownFromMap(eventMap)
     case "threat" => threatEventFromMap(eventMap)
     case "end_phase" => endPhaseEventFromMap(eventMap)
@@ -39,7 +39,7 @@ object Parser {
     IncomingData(time)
   }
 
-  protected def dataTranferEventFromMap(eventMap: Map[String, Any]): Event = {
+  protected def dataTransferEventFromMap(eventMap: Map[String, Any]): Event = {
     val time = extractInt(eventMap, "time").get
     DataTransfer(time)
   }
