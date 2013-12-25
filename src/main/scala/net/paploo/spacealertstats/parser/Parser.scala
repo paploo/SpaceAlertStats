@@ -8,9 +8,11 @@ object Parser {
     val input = read(pathToMission(missionNumber))
     val data = JSON.parseFull(input)
     data match {
-      case Some(seq: Seq[Map[String, Any]]) => Some( Mission(seq.map(eventFromMap): _*) )
-      case Some(_) => None
-      case None => None
+      //case Some(seq: Seq[Map[String, Any]]) => Some( Mission(seq.map(eventFromMap): _*) )
+      case Some(seq: Seq[_]) =>
+        val dataSeq = seq.asInstanceOf[Seq[Map[String, Any]]]
+        Some( Mission.fromSeq(dataSeq.map(eventFromMap)) )
+      case _ => None
     }
   }
 
@@ -35,23 +37,23 @@ object Parser {
   }
 
   protected def incomingDataEventFromMap(eventMap: Map[String, Any]): Event = {
-    val time = extractInt(eventMap, "time").get
+    val time = extractTime(eventMap)
     IncomingData(time)
   }
 
   protected def dataTransferEventFromMap(eventMap: Map[String, Any]): Event = {
-    val time = extractInt(eventMap, "time").get
+    val time = extractTime(eventMap)
     DataTransfer(time)
   }
 
   protected def communicationsEventDownFromMap(eventMap: Map[String, Any]): Event = {
-    val time = extractInt(eventMap, "time").get
+    val time = extractTime(eventMap)
     val duration = extractInt(eventMap, "duration").getOrElse(0)
     CommunicationsDown(time, duration)
   }
 
   protected def threatEventFromMap(eventMap: Map[String, Any]): Event = {
-    val time = extractInt(eventMap, "time").get
+    val time = extractTime(eventMap)
     val tPlus = extractInt(eventMap, "t").get
     val zone = extractZone(eventMap, "zone").get
     val serious = extractBoolean(eventMap, "serious").getOrElse(false)
@@ -60,10 +62,12 @@ object Parser {
   }
 
   protected def endPhaseEventFromMap(eventMap: Map[String, Any]): Event = {
-    val time = extractInt(eventMap, "time").get
+    val time = extractTime(eventMap)
     val phase = extractInt(eventMap, "phase").get
     EndPhase(time, phase)
   }
+
+  protected def extractTime(eventMap: Map[String, Any]): Int = extractInt(eventMap, "time").get
 
   protected def extractInt(eventMap: Map[String, Any], key: String): Option[Int] = eventMap.get(key) match {
     case Some(x: Double) => Some(x.toInt)
