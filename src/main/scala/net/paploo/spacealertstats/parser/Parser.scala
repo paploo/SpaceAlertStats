@@ -65,35 +65,27 @@ object Parser {
     EndPhase(time, phase)
   }
 
-  protected def extractInt(eventMap: Map[String, Any], key: String): Option[Int] = {
-    eventMap.get(key) match {
-      case Some(x: Double) => Some(x.toInt)
-      case Some(n: Int) => Some(n)
-      case _ => None
-    }
+  protected def extractInt(eventMap: Map[String, Any], key: String): Option[Int] = eventMap.get(key) match {
+    case Some(x: Double) => Some(x.toInt)
+    case Some(n: Int) => Some(n)
+    case _ => None
   }
 
-  protected def extractString(eventMap: Map[String, Any], key: String): Option[String] = {
-    eventMap.get(key) match {
-      case Some(value) => Some(value.toString)
-      case None => None
-    }
+  protected def extractString(eventMap: Map[String, Any], key: String): Option[String] = eventMap.get(key) match {
+    case Some(value) => Some(value.toString)
+    case None => None
   }
 
-  protected def extractBoolean(eventMap: Map[String, Any], key: String): Option[Boolean] = {
-    eventMap.get(key) match {
-      case Some(flag: Boolean) => Some(flag)
-      case _ => None
-    }
+  protected def extractBoolean(eventMap: Map[String, Any], key: String): Option[Boolean] = eventMap.get(key) match {
+    case Some(flag: Boolean) => Some(flag)
+    case _ => None
   }
 
-  protected def extractZone(eventMap: Map[String, Any], key: String): Option[Event.Zone] = {
-    eventMap.get(key) match {
-      case Some("white") => Some(Event.White)
-      case Some("red") => Some(Event.Red)
-      case Some("blue") => Some(Event.Blue)
-      case Some("internal") => Some(Event.Internal)
-      case _ => None
-    }
+  protected def extractZone(eventMap: Map[String, Any], key: String): Option[Event.Zone] = eventMap.get(key) match {
+    case Some("white") => Some(Event.White)
+    case Some("red") => Some(Event.Red)
+    case Some("blue") => Some(Event.Blue)
+    case Some("internal") => Some(Event.Internal)
+    case _ => None
   }
 }
