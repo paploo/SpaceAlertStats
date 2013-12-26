@@ -16,7 +16,7 @@ class SeqStats[A](seq: Seq[A]) {
 
   def length: Int = seq.length
 
-  def mean(implicit num: Numeric[A], aTod: A => Double): Double = sum / length.toDouble
+  def mean(implicit num: Numeric[A]): Double = num.toDouble(sum) / length.toDouble
 
   /**
    * Selects the median value.
@@ -32,11 +32,16 @@ class SeqStats[A](seq: Seq[A]) {
     sortedSeq(index)
   }
 
-  def averagedMedian(implicit ord: Ordering[A], aTod: A => Double): Double = {
+  def averagedMedian(implicit ord: Ordering[A], num: Numeric[A]): Double = {
     val sortedSeq = seq.sorted
     val len = sortedSeq.length
-    if (len%2 ==0) (sortedSeq(len/2-1) + sortedSeq(len/2)) / 2.0
-    else sortedSeq((len-1)/2)
+    if (len%2 ==0) {
+      val elem1 = sortedSeq(len/2-1)
+      val elem2 = sortedSeq(len/2)
+      val elemSum = num.plus(elem1, elem2)
+      num.toDouble(elemSum) / 2.0
+    }
+    else num.toDouble(sortedSeq((len-1)/2))
   }
 
   def toSeq: Seq[A] = seq
