@@ -25,8 +25,10 @@ case class CommunicationsDown(time: Integer, duration: Integer) extends Event
 
 case class Threat(time: Integer, tPlus: Integer, zone: Event.Zone, serious: Boolean = false, unconfirmed: Boolean = false) extends Event
 
+case class BeginPhase(time: Integer, phase: Integer) extends Event
+
 case class EndPhase(time: Integer, phase: Integer) extends Event
 
 case class UnknownEvent(eventType: String) extends Event {
-  def time = 0
+  def time = -1
 }

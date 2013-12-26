@@ -11,7 +11,9 @@ object Parser {
       //case Some(seq: Seq[Map[String, Any]]) => Some( Mission(seq.map(eventFromMap): _*) )
       case Some(seq: Seq[_]) =>
         val dataSeq = seq.asInstanceOf[Seq[Map[String, Any]]]
-        Some( Mission.fromSeq(dataSeq.map(eventFromMap)) )
+        val convertedEvents = dataSeq.flatMap(eventsFromMap)
+        val events = if(convertedEvents.isEmpty) Nil else padPhaseEvents(convertedEvents)
+        Some( Mission.fromSeq(events) )
       case _ => None
     }
   }
@@ -27,44 +29,49 @@ object Parser {
     input
   }
 
-  protected def eventFromMap(eventMap: Map[String, Any]): Event = eventMap.getOrElse("event", "no-event-defined") match {
+  protected def padPhaseEvents(events: Seq[Event]): Seq[Event] = {
+    // Add the start of phase one, and trim the last start phase that was inserted.
+    List(BeginPhase(0,1)) ++ events.dropRight(1)
+  }
+
+  protected def eventsFromMap(eventMap: Map[String, Any]): List[Event] = eventMap.getOrElse("event", "no-event-defined") match {
     case "incoming_data" => incomingDataEventFromMap(eventMap)
     case "data_transfer" => dataTransferEventFromMap(eventMap)
     case "communications_down" => communicationsEventDownFromMap(eventMap)
     case "threat" => threatEventFromMap(eventMap)
     case "end_phase" => endPhaseEventFromMap(eventMap)
-    case eventType => UnknownEvent(eventType.toString)
+    case eventType => List(UnknownEvent(eventType.toString))
   }
 
-  protected def incomingDataEventFromMap(eventMap: Map[String, Any]): Event = {
+  protected def incomingDataEventFromMap(eventMap: Map[String, Any]): List[Event] = {
     val time = extractTime(eventMap)
-    IncomingData(time)
+    List( IncomingData(time))
   }
 
-  protected def dataTransferEventFromMap(eventMap: Map[String, Any]): Event = {
+  protected def dataTransferEventFromMap(eventMap: Map[String, Any]): List[Event] = {
     val time = extractTime(eventMap)
-    DataTransfer(time)
+    List(DataTransfer(time))
   }
 
-  protected def communicationsEventDownFromMap(eventMap: Map[String, Any]): Event = {
+  protected def communicationsEventDownFromMap(eventMap: Map[String, Any]): List[Event] = {
     val time = extractTime(eventMap)
     val duration = extractInt(eventMap, "duration").getOrElse(0)
-    CommunicationsDown(time, duration)
+    List(CommunicationsDown(time, duration))
   }
 
-  protected def threatEventFromMap(eventMap: Map[String, Any]): Event = {
+  protected def threatEventFromMap(eventMap: Map[String, Any]): List[Event] = {
     val time = extractTime(eventMap)
     val tPlus = extractInt(eventMap, "t").get
     val zone = extractZone(eventMap, "zone").get
     val serious = extractBoolean(eventMap, "serious").getOrElse(false)
     val unconfirmed = extractBoolean(eventMap, "unconfirmed").getOrElse(false)
-    Threat(time, tPlus, zone, serious, unconfirmed)
+    List(Threat(time, tPlus, zone, serious, unconfirmed))
   }
 
-  protected def endPhaseEventFromMap(eventMap: Map[String, Any]): Event = {
+  protected def endPhaseEventFromMap(eventMap: Map[String, Any]): List[Event] = {
     val time = extractTime(eventMap)
     val phase = extractInt(eventMap, "phase").get
-    EndPhase(time, phase)
+    List(EndPhase(time, phase), BeginPhase(time, phase+1))
   }
 
   protected def extractTime(eventMap: Map[String, Any]): Int = extractInt(eventMap, "time").get
