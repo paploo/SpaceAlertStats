@@ -19,31 +19,28 @@ object App {
         case EndPhase(_, _) => true
         case _ => false
       }
-      events.splitAt(phaseEndIndex+1)
+      events.splitAt(phaseEndIndex + 1)
     }
 
-    def phases(events: List[Event], acc: List[List[Event]] = Nil): List[List[Event]] = {
+    def phases2(events: List[Event], acc: List[List[Event]] = Nil): List[List[Event]] = {
       if (events.isEmpty) acc.reverse
       else {
         val split = splitAtPhase(events)
-        phases(split._2, split._1 :: acc)
+        phases2(split._2, split._1 :: acc)
       }
     }
 
-    def phases2(event: List[Event]): List[List[Event]] = {
-      val buf = ListBuffer[ListBuffer[Event]]()
-      event.foldLeft(buf){
+    def phases(event: List[Event]): List[List[Event]] =
+      event.foldLeft(ListBuffer[ListBuffer[Event]]()) {
         (acc, event) => event match {
-          case BeginPhase(_,_) => acc += ListBuffer(event)
+          case BeginPhase(_, _) => acc += ListBuffer(event)
           case _ =>
             acc.last += event
             acc
         }
-      }
-      buf.map(_.toList).toList
-    }
+      }.map(_.toList).toList
 
     println(phases(events))
-    println(phases2(events))
+    println(mission.phases)
   }
 }
