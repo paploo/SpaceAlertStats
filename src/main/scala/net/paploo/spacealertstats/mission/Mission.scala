@@ -10,13 +10,7 @@ object Mission {
 
 class Mission private (val events: List[Event]) {
 
-  def phaseEvents(phase: Integer): List[Event] = events.dropWhile {
-    case BeginPhase(_, ph) if ph==phase => false
-    case _ => true
-  }.reverse.dropWhile {
-    case EndPhase(_, ph) if ph==phase => false
-    case _ => true
-  }.reverse
+  def phase(phase: Integer): List[Event] = phases(phase-1)
 
   lazy val phases: List[List[Event]] =
     events.foldLeft(ListBuffer[ListBuffer[Event]]()) {
