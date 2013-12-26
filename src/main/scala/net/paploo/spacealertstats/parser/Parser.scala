@@ -6,7 +6,7 @@ import net.paploo.spacealertstats.mission._
 object Parser {
   def parse(missionNumber: Int): Option[Mission] = {
     val input = read(pathToMission(missionNumber))
-    val data = JSON.parseFull(input)
+    val data = parseJSON(input)
     data match {
       //case Some(seq: Seq[Map[String, Any]]) => Some( Mission(seq.map(eventFromMap): _*) )
       case Some(seq: Seq[_]) =>
@@ -19,6 +19,20 @@ object Parser {
   }
 
   def parseAll: Seq[Option[Mission]] = (1 to 8).map(parse)
+
+  protected def parseJSON(input: String): Option[Any] = {
+    // Gives no error handling, but is one-liner:
+    JSON.parseFull(input)
+
+    // By cribbing from the source, this would work
+    // https://github.com/scala/scala/blob/v2.10.3/src/library/scala/util/parsing/json/JSON.scala
+    JSON.phrase(JSON.root)(new JSON.lexical.Scanner(input)) match {
+      case JSON.Success(result, _) => Some(JSON.resolveType(result))
+      case failure: JSON.NoSuccess =>
+        System.err.println(failure)
+        None
+    }
+  }
 
   protected def pathToMission(missionNumber: Int): String = s"data/mission_$missionNumber.json"
 

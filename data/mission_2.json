@@ -17,7 +17,7 @@
   {"time":465, "event":"end_phase", "phase":2},
 
   {"time":480, "event":"data_transfer"},
-  {"time":500, "event":"communications_down", "duration":30}.
+  {"time":500, "event":"communications_down", "duration":30},
   {"time":565, "event":"data_transfer"},
   {"time":620, "event":"end_phase", "phase":3}
 ]

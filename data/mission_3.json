@@ -7,12 +7,12 @@
   {"time":185, "event":"data_transfer"},
   {"time":230, "event":"end_phase", "phase":1},
 
-  {"time":240, "event":"threat", "t":6, "zone":white, "serious":true},
+  {"time":240, "event":"threat", "t":6, "zone":"white", "serious":true},
   {"time":270, "event":"communications_down", "duration":20},
-  {"time":295, "event":"threat", "t":7, "zone":blue, "serious":true},
+  {"time":295, "event":"threat", "t":7, "zone":"blue", "serious":true},
   {"time":320, "event":"data_transfer"},
   {"time":340, "event":"incoming_data"},
-  {"time":355, "event":"threat", "t":8, "zone":red, "serious":true},
+  {"time":355, "event":"threat", "t":8, "zone":"red", "serious":true},
   {"time":410, "event":"data_transfer"},
   {"time":450, "event":"end_phase", "phase":2},
 

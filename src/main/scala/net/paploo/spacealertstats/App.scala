@@ -7,7 +7,7 @@ import scala.collection.mutable.ListBuffer
 object App {
 
   def main(args: Array[String]): Unit = {
-    val parsed = Parser.parse(1)
+    val parsed = Parser.parse(2)
     println(parsed)
     val mission = parsed.getOrElse(Mission())
     val events = mission.events
@@ -17,5 +17,8 @@ object App {
     println(mission.phases)
 
     println(mission.phase(2))
+    println(mission.phaseDurations)
+
+    println(Parser.parseAll)
   }
 }
