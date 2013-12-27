@@ -8,7 +8,10 @@ import net.paploo.spacealertstats.stats.SeqStats.Implicits._
 object App {
 
   def main(args: Array[String]): Unit = {
-    for(report <- reports) {println(report.toFullString); print("\n")}
+    for(report <- reports) {
+      println(report.toFullString)
+      print("\n")
+    }
   }
 
   lazy val missions: List[Mission] = {
@@ -20,8 +23,7 @@ object App {
   }
 
   lazy val reports: List[Report[Any,Any]] = List(
-    new PhaseDurationReport(missions),
-    new TestReport(missions)
+    new PhaseDurationReport(missions)
   )
 }
 
