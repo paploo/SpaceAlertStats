@@ -57,15 +57,23 @@ class SeqStats[A](seq: Seq[A]) {
   }
 
   def variance(implicit num: Numeric[A]): Double = {
-    val sqOfSums: A = num.times(sum, sum)
-    val sumOfSqs: A = seq.map(a => num.times(a,a)).sum
-    val numerator: A = num.minus(num.times(sumOfSqs, num.fromInt(length)),sqOfSums)
-    num.toDouble(numerator) / (length*length).toDouble
+    val sqOfSums: Double = num.toDouble( num.times(sum, sum) )
+    val sumOfSqs: Double = num.toDouble( seq.map(a => num.times(a,a)).sum )
+    val numerator: Double = (sumOfSqs*length) - sqOfSums
+    numerator / (length*length).toDouble
   }
 
   def toCSV: String = seq.mkString("\n")
 
-  def toTable[B](implicit asTraversable: A => GenTraversableOnce[B]): String = {
+  /**
+   * If we are a sequence of equal length sequences, output the values of each
+   * sequence in each column, comma delimited.  This allows importing the
+   * sequence of sequences into plotting software, where each sub sequence is
+   * a column in the plotting software.
+   *
+   * TODO: In the future, support sequences of different lengths by giving no value.
+   */
+  def toOutputTable[B](implicit asTraversable: A => GenTraversableOnce[B]): String = {
     seq.transpose.map(_.mkString(", ")).mkString("\n")
   }
 

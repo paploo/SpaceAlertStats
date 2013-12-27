@@ -4,22 +4,24 @@ import net.paploo.spacealertstats.parser.Parser
 import net.paploo.spacealertstats.report._
 import net.paploo.spacealertstats.mission.Mission
 import net.paploo.spacealertstats.stats.SeqStats.Implicits._
-import net.paploo.spacealertstats.stats.Stats
 
 object App {
 
   def main(args: Array[String]): Unit = {
+    for(report <- reports) {println(report.toFullString); print("\n")}
+  }
+
+  lazy val missions: List[Mission] = {
     val missionData = Parser.parseAll
-    val missions = missionData.filter {
+    missionData.filter {
       case Some(m: Mission) => true
       case _ => false
     }.map(_.get).toList
-
-    val report = new PhaseDurationReport(missions)
-    println(report.name)
-    println(report.result.map(_.toMap))
-    println(report.durationLists)
-    println(report.durationLists.toTable)
   }
+
+  lazy val reports: List[Report[Any,Any]] = List(
+    new PhaseDurationReport(missions),
+    new TestReport(missions)
+  )
 }
 

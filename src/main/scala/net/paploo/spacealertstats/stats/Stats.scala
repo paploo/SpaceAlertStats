@@ -31,13 +31,15 @@ trait Stats[A] {
 
   def toMap = Map(
     "length" -> length,
-    "bounds" -> (min, max),
+    "bounds" -> ((min, max)),
     "sum" -> sum,
     "median" -> median,
     "mean" -> mean,
     "variance" -> variance,
     "stdDeviation" -> stdDeviation
   )
+
+  override def toString = s"Stats(length = $length, bounds = $bounds, sum = $sum, median = $median, mean = $mean, variance = $variance, stdDeviation = $stdDeviation)"
 
 }
 
