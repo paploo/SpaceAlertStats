@@ -25,5 +25,5 @@ object App {
   lazy val reports: List[Report[Any,Any]] = List(
     new PhaseDurationReport(missions)
   )
-}
 
+}

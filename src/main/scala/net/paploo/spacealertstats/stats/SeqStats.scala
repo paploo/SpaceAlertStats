@@ -65,16 +65,32 @@ class SeqStats[A](seq: Seq[A]) {
 
   def toCSV: String = seq.mkString("\n")
 
+  def toTable[B](implicit asTraversable: A => GenTraversableOnce[B]): Seq[Seq[Option[B]]] = {
+    val lists = seq.map(asTraversable(_).toList)
+    val maxLen = lists.map(_.length).max
+    (0 until maxLen).map {i =>
+      lists.map {l => if(l.isDefinedAt(i)) Some(l(i)) else None}
+    }.toList
+  }
+
   /**
-   * If we are a sequence of equal length sequences, output the values of each
+   * Outpus the values of each
    * sequence in each column, comma delimited.  This allows importing the
    * sequence of sequences into plotting software, where each sub sequence is
    * a column in the plotting software.
-   *
-   * TODO: In the future, support sequences of different lengths by giving no value.
    */
   def toOutputTable[B](implicit asTraversable: A => GenTraversableOnce[B]): String = {
-    seq.transpose.map(_.mkString(", ")).mkString("\n")
+    val width = 10
+
+    toTable.map {l =>
+       l.map {
+         case Some(i: Int) => s"%${width}d".format(i)
+         case Some(f: Double) => s"%${width}.${width}f".format(f)
+         case Some(s: String) => s"%${width}s".format(s)
+         case Some(value) => s"%${width}s".format(value.toString)
+         case None => " " * 10
+       }.mkString(", ")
+    }.mkString("\n")
   }
 
   def toStats(implicit ord: Ordering[A], num: Numeric[A]): StatsBlock[A] =
