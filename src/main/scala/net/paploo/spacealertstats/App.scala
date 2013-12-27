@@ -1,33 +1,25 @@
 package net.paploo.spacealertstats
 
 import net.paploo.spacealertstats.parser.Parser
-import net.paploo.spacealertstats.mission._
-import net.paploo.spacealertstats.stats.SeqStats._
+import net.paploo.spacealertstats.report._
+import net.paploo.spacealertstats.mission.Mission
+import net.paploo.spacealertstats.stats.SeqStats.Implicits._
+import net.paploo.spacealertstats.stats.Stats
 
 object App {
 
   def main(args: Array[String]): Unit = {
-    val parsed = Parser.parse(2)
-    println(parsed)
-    val mission = parsed.getOrElse(Mission())
-    val events = mission.events
-    println(events)
+    val missionData = Parser.parseAll
+    val missions = missionData.filter {
+      case Some(m: Mission) => true
+      case _ => false
+    }.map(_.get).toList
 
-
-    println(mission.phases)
-
-    println(mission.phase(2))
-    println(mission.phaseDurations)
-
-    println(Parser.parseAll)
-
-    val l = List(10,24,50,48,31)
-    println(l.min)
-    println(l.max)
-    println(l.length)
-    println(l.sum)
-    println(l.mean)
-    println(l.median)
-    println(l.averagedMedian)
+    val report = new PhaseDurationReport(missions)
+    println(report.name)
+    println(report.result.map(_.toMap))
+    println(report.durationLists)
+    println(report.durationLists.toTable)
   }
 }
+
