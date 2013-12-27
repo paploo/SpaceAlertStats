@@ -79,9 +79,7 @@ class SeqStats[A](seq: Seq[A]) {
    * sequence of sequences into plotting software, where each sub sequence is
    * a column in the plotting software.
    */
-  def toOutputTable[B](implicit asTraversable: A => GenTraversableOnce[B]): String = {
-    val width = 10
-
+  def toOutputTable[B](width: Int)(implicit asTraversable: A => GenTraversableOnce[B]): String = {
     toTable.map {l =>
        l.map {
          case Some(i: Int) => s"%${width}d".format(i)
@@ -92,6 +90,8 @@ class SeqStats[A](seq: Seq[A]) {
        }.mkString(", ")
     }.mkString("\n")
   }
+
+  def toOutputTable[B](implicit asTraversable: A => GenTraversableOnce[B]): String = toOutputTable(11)
 
   def toStats(implicit ord: Ordering[A], num: Numeric[A]): StatsBlock[A] =
     StatsBlock(length, (min,max), sum, median, mean, variance)
