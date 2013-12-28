@@ -12,10 +12,10 @@ class PhaseDurationReport(val missions: Seq[Mission]) extends Report[Seq[Stats[I
 
   override lazy val backingData = Some(durationLists)
 
-  lazy val durationLists = missions.map(_.phaseDurations).transpose
-
   override lazy val toResultString = result.mkString("List(\n\t", "\n\t", "\n)")
 
   override lazy val toBackingDataString = Some(durationLists.toOutputTable)
+
+  lazy val durationLists = missions.map(_.phaseDurations).transpose
 }
 

@@ -14,20 +14,20 @@ object Event {
 }
 
 trait Event {
-  def time: Integer
+  def time: Int
 }
 
-case class IncomingData(time: Integer) extends Event
+case class IncomingData(time: Int) extends Event
 
-case class DataTransfer(time: Integer) extends Event
+case class DataTransfer(time: Int) extends Event
 
-case class CommunicationsDown(time: Integer, duration: Integer) extends Event
+case class CommunicationsDown(time: Int, duration: Int) extends Event
 
-case class Threat(time: Integer, tPlus: Integer, zone: Event.Zone, serious: Boolean = false, unconfirmed: Boolean = false) extends Event
+case class Threat(time: Int, tPlus: Int, zone: Event.Zone, serious: Boolean = false, unconfirmed: Boolean = false) extends Event
 
-case class BeginPhase(time: Integer, phase: Integer) extends Event
+case class BeginPhase(time: Int, phase: Int) extends Event
 
-case class EndPhase(time: Integer, phase: Integer) extends Event
+case class EndPhase(time: Int, phase: Int) extends Event
 
 case class UnknownEvent(eventType: String) extends Event {
   def time = -1
